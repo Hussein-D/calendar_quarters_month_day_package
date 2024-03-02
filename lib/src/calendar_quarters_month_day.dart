@@ -9,8 +9,9 @@ class CalendarQuartersMonthDay extends StatefulWidget {
       {super.key,
       required this.locale,
       this.callbackFunction,
+      this.textStyle,
       this.initialDate});
-
+  final TextStyle? textStyle;
   final String locale;
   final dynamic callbackFunction;
   final DateTime? initialDate;
@@ -26,8 +27,8 @@ class _CalendarQuartersMonthDayState extends State<CalendarQuartersMonthDay> {
     await showDialog(
         context: context,
         builder: (context) {
-          if (Platform.isAndroid) {
-            return StatefulBuilder(builder: (context, setState) {
+          return StatefulBuilder(builder: (context, setState) {
+            if (Platform.isAndroid) {
               return AlertDialog(
                 title: Row(
                   children: [
@@ -113,40 +114,147 @@ class _CalendarQuartersMonthDayState extends State<CalendarQuartersMonthDay> {
                       )),
                 ],
               );
-            });
-          } else {
-            return const CupertinoAlertDialog();
-          }
+            } else {
+              return CupertinoAlertDialog(
+                title: Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _chosenIndex = 0;
+                          });
+                        },
+                        child: DialogHeading(
+                          label: "Day",
+                          isChosen: _chosenIndex == 0,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _chosenIndex = 1;
+                          });
+                        },
+                        child: DialogHeading(
+                          label: "Month",
+                          isChosen: _chosenIndex == 1,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _chosenIndex = 2;
+                          });
+                        },
+                        child: DialogHeading(
+                          label: "Quarters",
+                          isChosen: _chosenIndex == 2,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                content: Container(
+                  child: _chosenIndex == 0
+                      ? DayPicker(
+                          locale: widget.locale,
+                          initialDate: widget.initialDate,
+                          callbackFunction: (List<DateTime> dates) {
+                            chosenDates = dates;
+                          },
+                        )
+                      : _chosenIndex == 1
+                          ? MonthPicker(
+                              locale: widget.locale,
+                              initialYear: DateTime.now(),
+                              callbackFunction: (List<DateTime> dates) {
+                                chosenDates = dates;
+                              },
+                            )
+                          : QuarterPicker(
+                              locale: widget.locale,
+                              initialYear: DateTime.now(),
+                              callbackFunction: (List<DateTime> dates) {
+                                chosenDates = dates;
+                              },
+                            ),
+                ),
+                actions: [
+                  CupertinoDialogAction(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text("Cancel")),
+                  CupertinoDialogAction(
+                      onPressed: () {
+                        Navigator.pop(context, {"dates": chosenDates});
+                      },
+                      child: Text(
+                        "OK",
+                        locale: Locale(locale),
+                      )),
+                ],
+              );
+            }
+          });
         }).then((value) {
       widget.callbackFunction(chosenDates);
+      setState(() {});
     });
+  }
+
+  String formatDates(DateTime date1, DateTime date2) {
+    if (date1 == date2) {
+      return DateFormat('MMM dd, yyyy').format(date1);
+    } else if (date1.year == date2.year && date1.month == date2.month) {
+      return DateFormat('MMM, yyyy').format(date1);
+    } else {
+      String quarter1 = getQuarterString(date1.month);
+      return '$quarter1, ${date1.year}';
+    }
+  }
+
+  String getQuarterString(int month) {
+    switch (month) {
+      case 1:
+      case 2:
+      case 3:
+        return 'Jan-Mar';
+      case 4:
+      case 5:
+      case 6:
+        return 'Apr-Jun';
+      case 7:
+      case 8:
+      case 9:
+        return 'Jul-Sep';
+      case 10:
+      case 11:
+      case 12:
+        return 'Oct-Dec';
+      default:
+        return '';
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text("Quarters Month Day Calendar Picker"),
-      ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
+    return TextButton(
         onPressed: () {
           _showDialog(widget.locale);
         },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-    );
+        child: Text(
+          chosenDates.isEmpty
+              ? "Choose an interval"
+              : formatDates(chosenDates.first, chosenDates.last),
+          style: widget.textStyle,
+          locale: Locale(widget.locale),
+        ));
   }
 }
 
