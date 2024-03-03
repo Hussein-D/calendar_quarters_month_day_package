@@ -492,9 +492,22 @@ class _MonthPickerState extends State<MonthPicker> {
   int yearText = -1;
   int chosenMonth = -1;
   DateTime? dateSelected;
+  DateTime firstDate = DateTime.now();
+  DateTime lastDate = DateTime.now();
   @override
   void initState() {
     yearText = widget.initialYear.year;
+    chosenMonth = widget.initialYear.month - 1;
+    dateSelected = widget.initialYear;
+    DateTime dateTime = DateTime(yearText, chosenMonth + 1);
+    final nextMonth = (dateTime.month < 12) ? dateTime.month + 1 : 1;
+    final nextYear = (dateTime.month < 12) ? dateTime.year : dateTime.year + 1;
+    DateTime endOfMonth =
+        DateTime(nextYear, nextMonth, 1).subtract(const Duration(days: 1));
+    firstDate = DateTime(yearText, chosenMonth + 1, 1);
+    lastDate = endOfMonth;
+    dateSelected = DateTime(yearText, chosenMonth + 1);
+    widget.callbackFunction([firstDate, lastDate]);
     super.initState();
   }
 
@@ -509,6 +522,20 @@ class _MonthPickerState extends State<MonthPicker> {
                 onPressed: () {
                   setState(() {
                     yearText--;
+                    if (chosenMonth != -1) {
+                      DateTime dateTime = DateTime(yearText, chosenMonth + 1);
+                      final nextMonth =
+                          (dateTime.month < 12) ? dateTime.month + 1 : 1;
+                      final nextYear = (dateTime.month < 12)
+                          ? dateTime.year
+                          : dateTime.year + 1;
+                      DateTime endOfMonth = DateTime(nextYear, nextMonth, 1)
+                          .subtract(const Duration(days: 1));
+                      firstDate = DateTime(yearText, chosenMonth + 1, 1);
+                      lastDate = endOfMonth;
+                      dateSelected = DateTime(yearText, chosenMonth + 1);
+                      widget.callbackFunction([firstDate, lastDate]);
+                    }
                   });
                 },
                 icon: widget.leftIcon ?? const Icon(Icons.arrow_back_ios)),
@@ -520,6 +547,20 @@ class _MonthPickerState extends State<MonthPicker> {
                 onPressed: () {
                   setState(() {
                     yearText++;
+                    if (chosenMonth != -1) {
+                      DateTime dateTime = DateTime(yearText, chosenMonth + 1);
+                      final nextMonth =
+                          (dateTime.month < 12) ? dateTime.month + 1 : 1;
+                      final nextYear = (dateTime.month < 12)
+                          ? dateTime.year
+                          : dateTime.year + 1;
+                      DateTime endOfMonth = DateTime(nextYear, nextMonth, 1)
+                          .subtract(const Duration(days: 1));
+                      firstDate = DateTime(yearText, chosenMonth + 1, 1);
+                      lastDate = endOfMonth;
+                      dateSelected = DateTime(yearText, chosenMonth + 1);
+                      widget.callbackFunction([firstDate, lastDate]);
+                    }
                   });
                 },
                 icon: widget.rightIcon ?? const Icon(Icons.arrow_forward_ios))
@@ -540,20 +581,21 @@ class _MonthPickerState extends State<MonthPicker> {
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
-                    final DateTime dateTime = DateTime(yearText, index + 1);
+                    DateTime dateTime = DateTime(yearText, index + 1);
                     final nextMonth =
                         (dateTime.month < 12) ? dateTime.month + 1 : 1;
                     final nextYear = (dateTime.month < 12)
                         ? dateTime.year
                         : dateTime.year + 1;
-                    final DateTime endOfMonth = DateTime(nextYear, nextMonth, 1)
+                    DateTime endOfMonth = DateTime(nextYear, nextMonth, 1)
                         .subtract(const Duration(days: 1));
+                    firstDate = DateTime(yearText, index + 1, 1);
+                    lastDate = endOfMonth;
+                    dateSelected = DateTime(yearText, index + 1);
                     setState(() {
                       chosenMonth = index;
                     });
-                    dateSelected = DateTime(yearText, index + 1);
-                    widget.callbackFunction(
-                        [DateTime(yearText, index + 1, 1), endOfMonth]);
+                    widget.callbackFunction([firstDate, lastDate]);
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -610,10 +652,12 @@ class QuarterPicker extends StatefulWidget {
 class _QuarterPickerState extends State<QuarterPicker> {
   int yearText = -1;
   int chosenQuarter = -1;
-  DateTime? dateSelected;
   @override
   void initState() {
     yearText = widget.initialYear.year;
+    chosenQuarter = getQuarterOfYear(widget.initialYear);
+    List<DateTime> dates = getQuarterDates(yearText, chosenQuarter);
+    widget.callbackFunction(dates);
     super.initState();
   }
 
@@ -628,6 +672,9 @@ class _QuarterPickerState extends State<QuarterPicker> {
                 onPressed: () {
                   setState(() {
                     yearText--;
+                    List<DateTime> dates =
+                        getQuarterDates(yearText, chosenQuarter);
+                    widget.callbackFunction(dates);
                   });
                 },
                 icon: widget.leftIcon ?? const Icon(Icons.arrow_back_ios)),
@@ -639,6 +686,9 @@ class _QuarterPickerState extends State<QuarterPicker> {
                 onPressed: () {
                   setState(() {
                     yearText++;
+                    List<DateTime> dates =
+                        getQuarterDates(yearText, chosenQuarter);
+                    widget.callbackFunction(dates);
                   });
                 },
                 icon: widget.rightIcon ?? const Icon(Icons.arrow_forward_ios))
@@ -729,4 +779,20 @@ List<DateTime> getQuarterDates(int year, int quarterIndex) {
   }
 
   return [startDate, endDate];
+}
+
+int getQuarterOfYear(DateTime date) {
+  // Determine the month of the date
+  int month = date.month;
+
+  // Calculate the quarter based on the month
+  if (month >= 1 && month <= 3) {
+    return 0;
+  } else if (month >= 4 && month <= 6) {
+    return 1;
+  } else if (month >= 7 && month <= 9) {
+    return 2;
+  } else {
+    return 3;
+  }
 }

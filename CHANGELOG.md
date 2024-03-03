@@ -37,3 +37,15 @@ Provided clear licensing information and attribution for third-party assets used
 Ensured consistency in terminology and language throughout the document.
 Incorporated feedback from users to address areas of confusion and improve overall usability.
 We value your input in making our project documentation more informative and user-friendly. If you have any suggestions or encounter any further issues, please feel free to submit them via our GitHub repository.
+
+## 0.0.6
+Resolved issues with date calculations resulting in incorrect quarter determination.
+Fixed bugs causing inconsistencies in date parsing across different time zones.
+Addressed timezone-related discrepancies affecting date display and functionality.
+Corrected errors in date formatting resulting in improper representation in certain locales.
+Fixed bugs causing date-related crashes in specific edge cases.
+Resolved issues with date comparison logic leading to inaccurate results.
+Addressed date picker UI glitches on devices with varying screen sizes and resolutions.
+Fixed bugs causing date inputs to be ignored or overridden in certain scenarios.
+Optimized date handling algorithms to improve performance and reduce resource consumption.
+Resolved date-related compatibility issues with older versions of dependencies.
