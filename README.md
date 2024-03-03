@@ -29,7 +29,7 @@ To integrate Calendar Quarters, Months, and Days Picker into your Flutter projec
 
 ```yaml
 dependencies:
-  calendar_quarters_month_day: ^0.0.2
+  calendar_quarters_month_day: ^0.0.4
 
 import 'package:calendar_quarters_month_day/calendar_quarters_month_day.dart';
 

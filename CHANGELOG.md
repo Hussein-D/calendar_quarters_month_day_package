@@ -23,3 +23,17 @@ We're excited to announce that we've added a highly requested feature to our pac
 🖊️ With the new editable class feature, you can now make changes to the class directly within your application, providing greater flexibility and customization options.
 
 💡 Update your app now to take advantage of this powerful new feature and unlock even more possibilities with our package!
+
+## 0.0.5
+Readme File Fixes:
+
+Updated README.md file with comprehensive installation instructions for both Windows and macOS users.
+Clarified usage examples and provided additional context to improve user understanding.
+Added troubleshooting section to address common issues and their resolutions.
+Fixed broken links and formatting errors for better readability.
+Included a contribution guide to encourage community involvement and collaboration.
+Updated project dependencies and version compatibility information.
+Provided clear licensing information and attribution for third-party assets used.
+Ensured consistency in terminology and language throughout the document.
+Incorporated feedback from users to address areas of confusion and improve overall usability.
+We value your input in making our project documentation more informative and user-friendly. If you have any suggestions or encounter any further issues, please feel free to submit them via our GitHub repository.
