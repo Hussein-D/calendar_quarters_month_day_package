@@ -9,12 +9,60 @@ class CalendarQuartersMonthDay extends StatefulWidget {
       {super.key,
       required this.locale,
       this.callbackFunction,
+      this.activeHeadingContainerColor,
+      this.inActiveHeadingContainerColor,
+      this.activeHeadingTextStyle,
+      this.inActiveHeadingTextStyle,
+      this.initialDate,
+      this.monthsYearHeadingTextStyle,
+      this.monthsTextStyle,
+      this.monthsHeadingLeftIcon,
+      this.monthsHeadingRightIcon,
+      this.monthsBorderRadius,
+      this.monthsActiveColor,
+      this.monthsInactiveColor,
+      this.quartersYearHeadingTextStyle,
+      this.quartersTextStyle,
+      this.quartersHeadingLeftIcon,
+      this.quartersHeadingRightIcon,
+      this.quartersBorderRadius,
+      this.quartersActiveColor,
+      this.quartersInactiveColor,
       this.textStyle,
-      this.initialDate});
-  final TextStyle? textStyle;
+      this.selectADateTextStyle,
+      this.barrierDismissible,
+      this.cancelTextStyle,
+      this.okTextStyle,
+      this.okText,
+      this.cancelText});
+  final TextStyle? cancelTextStyle;
+  final TextStyle? okTextStyle;
+  final String? okText;
+  final String? cancelText;
+  final TextStyle? selectADateTextStyle;
+  final bool? barrierDismissible;
+  final Color? activeHeadingContainerColor;
+  final Color? inActiveHeadingContainerColor;
+  final TextStyle? activeHeadingTextStyle;
+  final TextStyle? inActiveHeadingTextStyle;
+  final TextStyle? monthsYearHeadingTextStyle;
+  final TextStyle? monthsTextStyle;
+  final Icon? monthsHeadingLeftIcon;
+  final Icon? monthsHeadingRightIcon;
+  final double? monthsBorderRadius;
+  final Color? monthsActiveColor;
+  final Color? monthsInactiveColor;
+  final TextStyle? quartersYearHeadingTextStyle;
+  final TextStyle? quartersTextStyle;
+  final Icon? quartersHeadingLeftIcon;
+  final Icon? quartersHeadingRightIcon;
+  final double? quartersBorderRadius;
+  final Color? quartersActiveColor;
+  final Color? quartersInactiveColor;
   final String locale;
   final dynamic callbackFunction;
   final DateTime? initialDate;
+  final TextStyle? textStyle;
   @override
   State<CalendarQuartersMonthDay> createState() =>
       _CalendarQuartersMonthDayState();
@@ -26,6 +74,7 @@ class _CalendarQuartersMonthDayState extends State<CalendarQuartersMonthDay> {
   void _showDialog(String locale) async {
     await showDialog(
         context: context,
+        barrierDismissible: widget.barrierDismissible ?? true,
         builder: (context) {
           return StatefulBuilder(builder: (context, setState) {
             if (Platform.isAndroid) {
@@ -42,6 +91,10 @@ class _CalendarQuartersMonthDayState extends State<CalendarQuartersMonthDay> {
                         child: DialogHeading(
                           label: "Day",
                           isChosen: _chosenIndex == 0,
+                          activeTextStyle: widget.activeHeadingTextStyle,
+                          inActiveTextStyle: widget.inActiveHeadingTextStyle,
+                          activeColor: widget.activeHeadingContainerColor,
+                          inActiveColor: widget.inActiveHeadingContainerColor,
                         ),
                       ),
                     ),
@@ -55,6 +108,10 @@ class _CalendarQuartersMonthDayState extends State<CalendarQuartersMonthDay> {
                         child: DialogHeading(
                           label: "Month",
                           isChosen: _chosenIndex == 1,
+                          activeTextStyle: widget.activeHeadingTextStyle,
+                          inActiveTextStyle: widget.inActiveHeadingTextStyle,
+                          activeColor: widget.activeHeadingContainerColor,
+                          inActiveColor: widget.inActiveHeadingContainerColor,
                         ),
                       ),
                     ),
@@ -68,15 +125,21 @@ class _CalendarQuartersMonthDayState extends State<CalendarQuartersMonthDay> {
                         child: DialogHeading(
                           label: "Quarters",
                           isChosen: _chosenIndex == 2,
+                          activeTextStyle: widget.activeHeadingTextStyle,
+                          inActiveTextStyle: widget.inActiveHeadingTextStyle,
+                          activeColor: widget.activeHeadingContainerColor,
+                          inActiveColor: widget.inActiveHeadingContainerColor,
                         ),
                       ),
                     ),
                   ],
                 ),
-                content: Container(
+                content: SizedBox(
+                  height: 300,
                   child: _chosenIndex == 0
                       ? DayPicker(
                           locale: widget.locale,
+                          textStyle: widget.selectADateTextStyle,
                           initialDate: widget.initialDate,
                           callbackFunction: (List<DateTime> dates) {
                             chosenDates = dates;
@@ -85,6 +148,13 @@ class _CalendarQuartersMonthDayState extends State<CalendarQuartersMonthDay> {
                       : _chosenIndex == 1
                           ? MonthPicker(
                               locale: widget.locale,
+                              leftIcon: widget.monthsHeadingLeftIcon,
+                              rightIcon: widget.monthsHeadingRightIcon,
+                              activeColor: widget.monthsActiveColor,
+                              inActiveColor: widget.monthsInactiveColor,
+                              yearTextStyle: widget.monthsYearHeadingTextStyle,
+                              monthsTextStyle: widget.monthsTextStyle,
+                              borderRadius: widget.monthsBorderRadius,
                               initialYear: DateTime.now(),
                               callbackFunction: (List<DateTime> dates) {
                                 chosenDates = dates;
@@ -92,6 +162,14 @@ class _CalendarQuartersMonthDayState extends State<CalendarQuartersMonthDay> {
                             )
                           : QuarterPicker(
                               locale: widget.locale,
+                              leftIcon: widget.quartersHeadingLeftIcon,
+                              rightIcon: widget.quartersHeadingRightIcon,
+                              activeColor: widget.quartersActiveColor,
+                              inActiveColor: widget.quartersInactiveColor,
+                              yearTextStyle:
+                                  widget.quartersYearHeadingTextStyle,
+                              textStyle: widget.quartersTextStyle,
+                              borderRadius: widget.monthsBorderRadius,
                               initialYear: DateTime.now(),
                               callbackFunction: (List<DateTime> dates) {
                                 chosenDates = dates;
@@ -100,16 +178,19 @@ class _CalendarQuartersMonthDayState extends State<CalendarQuartersMonthDay> {
                 ),
                 actions: [
                   TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text("Cancel")),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(widget.cancelText ?? "Cancel",
+                        style: widget.cancelTextStyle),
+                  ),
                   TextButton(
                       onPressed: () {
                         Navigator.pop(context, {"dates": chosenDates});
                       },
                       child: Text(
-                        "OK",
+                        widget.okText ?? "OK",
+                        style: widget.okTextStyle,
                         locale: Locale(locale),
                       )),
                 ],
@@ -128,6 +209,10 @@ class _CalendarQuartersMonthDayState extends State<CalendarQuartersMonthDay> {
                         child: DialogHeading(
                           label: "Day",
                           isChosen: _chosenIndex == 0,
+                          activeTextStyle: widget.activeHeadingTextStyle,
+                          inActiveTextStyle: widget.inActiveHeadingTextStyle,
+                          activeColor: widget.activeHeadingContainerColor,
+                          inActiveColor: widget.inActiveHeadingContainerColor,
                         ),
                       ),
                     ),
@@ -141,6 +226,10 @@ class _CalendarQuartersMonthDayState extends State<CalendarQuartersMonthDay> {
                         child: DialogHeading(
                           label: "Month",
                           isChosen: _chosenIndex == 1,
+                          activeTextStyle: widget.activeHeadingTextStyle,
+                          inActiveTextStyle: widget.inActiveHeadingTextStyle,
+                          activeColor: widget.activeHeadingContainerColor,
+                          inActiveColor: widget.inActiveHeadingContainerColor,
                         ),
                       ),
                     ),
@@ -154,15 +243,21 @@ class _CalendarQuartersMonthDayState extends State<CalendarQuartersMonthDay> {
                         child: DialogHeading(
                           label: "Quarters",
                           isChosen: _chosenIndex == 2,
+                          activeTextStyle: widget.activeHeadingTextStyle,
+                          inActiveTextStyle: widget.inActiveHeadingTextStyle,
+                          activeColor: widget.activeHeadingContainerColor,
+                          inActiveColor: widget.inActiveHeadingContainerColor,
                         ),
                       ),
                     ),
                   ],
                 ),
-                content: Container(
+                content: SizedBox(
+                  height: 300,
                   child: _chosenIndex == 0
                       ? DayPicker(
                           locale: widget.locale,
+                          textStyle: widget.selectADateTextStyle,
                           initialDate: widget.initialDate,
                           callbackFunction: (List<DateTime> dates) {
                             chosenDates = dates;
@@ -171,6 +266,13 @@ class _CalendarQuartersMonthDayState extends State<CalendarQuartersMonthDay> {
                       : _chosenIndex == 1
                           ? MonthPicker(
                               locale: widget.locale,
+                              leftIcon: widget.monthsHeadingLeftIcon,
+                              rightIcon: widget.monthsHeadingRightIcon,
+                              activeColor: widget.monthsActiveColor,
+                              inActiveColor: widget.monthsInactiveColor,
+                              yearTextStyle: widget.monthsYearHeadingTextStyle,
+                              monthsTextStyle: widget.monthsTextStyle,
+                              borderRadius: widget.monthsBorderRadius,
                               initialYear: DateTime.now(),
                               callbackFunction: (List<DateTime> dates) {
                                 chosenDates = dates;
@@ -178,6 +280,14 @@ class _CalendarQuartersMonthDayState extends State<CalendarQuartersMonthDay> {
                             )
                           : QuarterPicker(
                               locale: widget.locale,
+                              leftIcon: widget.quartersHeadingLeftIcon,
+                              rightIcon: widget.quartersHeadingRightIcon,
+                              activeColor: widget.quartersActiveColor,
+                              inActiveColor: widget.quartersInactiveColor,
+                              yearTextStyle:
+                                  widget.quartersYearHeadingTextStyle,
+                              textStyle: widget.quartersTextStyle,
+                              borderRadius: widget.monthsBorderRadius,
                               initialYear: DateTime.now(),
                               callbackFunction: (List<DateTime> dates) {
                                 chosenDates = dates;
@@ -186,16 +296,19 @@ class _CalendarQuartersMonthDayState extends State<CalendarQuartersMonthDay> {
                 ),
                 actions: [
                   CupertinoDialogAction(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text("Cancel")),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(widget.cancelText ?? "Cancel",
+                        style: widget.cancelTextStyle),
+                  ),
                   CupertinoDialogAction(
                       onPressed: () {
                         Navigator.pop(context, {"dates": chosenDates});
                       },
                       child: Text(
-                        "OK",
+                        widget.okText ?? "OK",
+                        style: widget.okTextStyle,
                         locale: Locale(locale),
                       )),
                 ],
@@ -203,8 +316,10 @@ class _CalendarQuartersMonthDayState extends State<CalendarQuartersMonthDay> {
             }
           });
         }).then((value) {
-      widget.callbackFunction(chosenDates);
-      setState(() {});
+      if (value != null) {
+        widget.callbackFunction(chosenDates);
+        setState(() {});
+      }
     });
   }
 
@@ -264,18 +379,14 @@ class DialogHeading extends StatelessWidget {
     required this.isChosen,
     required this.label,
     this.activeColor,
-    this.activeLabelColor,
     this.inActiveColor,
-    this.inActiveLabelColor,
     this.activeTextStyle,
     this.inActiveTextStyle,
   });
   final bool isChosen;
   final String label;
   final Color? activeColor;
-  final Color? activeLabelColor;
   final Color? inActiveColor;
-  final Color? inActiveLabelColor;
   final TextStyle? activeTextStyle;
   final TextStyle? inActiveTextStyle;
   @override
@@ -303,10 +414,12 @@ class DayPicker extends StatefulWidget {
       {super.key,
       this.callbackFunction,
       this.initialDate,
-      required this.locale});
+      required this.locale,
+      this.textStyle});
   final dynamic callbackFunction;
   final String locale;
   final DateTime? initialDate;
+  final TextStyle? textStyle;
   @override
   State<DayPicker> createState() => _DayPickerState();
 }
@@ -336,9 +449,12 @@ class _DayPickerState extends State<DayPicker> {
               }
             });
           },
-          child: Text(selectedDate == null
-              ? "Select Date"
-              : DateFormat('yyyy-MM-dd').format(selectedDate!)),
+          child: Text(
+            selectedDate == null
+                ? "Select Date"
+                : DateFormat('yyyy-MM-dd').format(selectedDate!),
+            style: widget.textStyle,
+          ),
         ),
       ),
     );
@@ -350,12 +466,24 @@ class MonthPicker extends StatefulWidget {
       {super.key,
       required this.initialYear,
       this.callbackFunction,
-      this.chosenColor,
-      this.locale});
+      this.locale,
+      this.yearTextStyle,
+      this.monthsTextStyle,
+      this.leftIcon,
+      this.rightIcon,
+      this.borderRadius,
+      this.activeColor,
+      this.inActiveColor});
+  final TextStyle? yearTextStyle;
+  final TextStyle? monthsTextStyle;
+  final Icon? leftIcon;
+  final Icon? rightIcon;
+  final double? borderRadius;
   final DateTime initialYear;
   final dynamic callbackFunction;
   final String? locale;
-  final Color? chosenColor;
+  final Color? activeColor;
+  final Color? inActiveColor;
   @override
   State<MonthPicker> createState() => _MonthPickerState();
 }
@@ -372,78 +500,82 @@ class _MonthPickerState extends State<MonthPicker> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                  onPressed: () {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+                onPressed: () {
+                  setState(() {
+                    yearText--;
+                  });
+                },
+                icon: widget.leftIcon ?? const Icon(Icons.arrow_back_ios)),
+            Text(
+              yearText.toString(),
+              style: widget.yearTextStyle,
+            ),
+            IconButton(
+                onPressed: () {
+                  setState(() {
+                    yearText++;
+                  });
+                },
+                icon: widget.rightIcon ?? const Icon(Icons.arrow_forward_ios))
+          ],
+        ),
+        SizedBox(
+          height: 200,
+          width: MediaQuery.of(context).size.width,
+          child: GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4, // Number of columns
+                crossAxisSpacing: 8.0, // Spacing between columns
+                mainAxisSpacing: 8.0, // Spacing between rows
+              ),
+              itemCount: 12,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    final DateTime dateTime = DateTime(yearText, index + 1);
+                    final nextMonth =
+                        (dateTime.month < 12) ? dateTime.month + 1 : 1;
+                    final nextYear = (dateTime.month < 12)
+                        ? dateTime.year
+                        : dateTime.year + 1;
+                    final DateTime endOfMonth = DateTime(nextYear, nextMonth, 1)
+                        .subtract(const Duration(days: 1));
                     setState(() {
-                      yearText--;
+                      chosenMonth = index;
                     });
+                    dateSelected = DateTime(yearText, index + 1);
+                    widget.callbackFunction(
+                        [DateTime(yearText, index + 1, 1), endOfMonth]);
                   },
-                  icon: const Icon(Icons.arrow_back_ios)),
-              Text(yearText.toString()),
-              IconButton(
-                  onPressed: () {
-                    setState(() {
-                      yearText++;
-                    });
-                  },
-                  icon: const Icon(Icons.arrow_forward_ios))
-            ],
-          ),
-          Container(
-            height: 200,
-            width: MediaQuery.of(context).size.width,
-            child: GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4, // Number of columns
-                  crossAxisSpacing: 8.0, // Spacing between columns
-                  mainAxisSpacing: 8.0, // Spacing between rows
-                ),
-                itemCount: 12,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      final DateTime dateTime = DateTime(yearText, index + 1);
-                      final nextMonth =
-                          (dateTime.month < 12) ? dateTime.month + 1 : 1;
-                      final nextYear = (dateTime.month < 12)
-                          ? dateTime.year
-                          : dateTime.year + 1;
-                      final DateTime endOfMonth =
-                          DateTime(nextYear, nextMonth, 1)
-                              .subtract(Duration(days: 1));
-                      setState(() {
-                        chosenMonth = index;
-                      });
-                      dateSelected = DateTime(yearText, index + 1);
-                      widget.callbackFunction(
-                          [DateTime(yearText, index + 1, 1), endOfMonth]);
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: chosenMonth == index
-                              ? widget.chosenColor ?? Colors.blueGrey
-                              : null),
-                      child: Center(
-                        child:
-                            Text(DateFormat.MMM(widget.locale).format(DateTime(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(widget.borderRadius ?? 0),
+                        color: chosenMonth == index
+                            ? widget.activeColor ?? Colors.blueGrey
+                            : widget.inActiveColor),
+                    child: Center(
+                      child: Text(
+                        DateFormat.MMM(widget.locale).format(DateTime(
                           widget.initialYear.year,
                           index + 1,
-                        ))),
+                        )),
+                        style: widget.monthsTextStyle,
                       ),
                     ),
-                  );
-                }),
-          ),
-        ],
-      ),
+                  ),
+                );
+              }),
+        ),
+      ],
     );
   }
 }
@@ -454,11 +586,23 @@ class QuarterPicker extends StatefulWidget {
       required this.initialYear,
       this.callbackFunction,
       this.locale,
-      this.chosenColor});
+      this.yearTextStyle,
+      this.textStyle,
+      this.leftIcon,
+      this.rightIcon,
+      this.borderRadius,
+      this.activeColor,
+      this.inActiveColor});
+  final TextStyle? yearTextStyle;
+  final TextStyle? textStyle;
   final DateTime initialYear;
+  final Icon? leftIcon;
+  final Icon? rightIcon;
+  final double? borderRadius;
   final dynamic callbackFunction;
   final String? locale;
-  final Color? chosenColor;
+  final Color? activeColor;
+  final Color? inActiveColor;
   @override
   State<QuarterPicker> createState() => _QuarterPickerState();
 }
@@ -475,65 +619,70 @@ class _QuarterPickerState extends State<QuarterPicker> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                  onPressed: () {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+                onPressed: () {
+                  setState(() {
+                    yearText--;
+                  });
+                },
+                icon: widget.leftIcon ?? const Icon(Icons.arrow_back_ios)),
+            Text(
+              yearText.toString(),
+              style: widget.yearTextStyle,
+            ),
+            IconButton(
+                onPressed: () {
+                  setState(() {
+                    yearText++;
+                  });
+                },
+                icon: widget.rightIcon ?? const Icon(Icons.arrow_forward_ios))
+          ],
+        ),
+        SizedBox(
+          height: 250,
+          width: MediaQuery.of(context).size.width,
+          child: GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // Number of columns
+                crossAxisSpacing: 6.0, // Spacing between columns
+                mainAxisSpacing: 6.0, // Spacing between rows
+              ),
+              itemCount: 4,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
                     setState(() {
-                      yearText--;
+                      chosenQuarter = index;
                     });
+                    List<DateTime> dates = getQuarterDates(yearText, index);
+                    widget.callbackFunction(dates);
                   },
-                  icon: const Icon(Icons.arrow_back_ios)),
-              Text(yearText.toString()),
-              IconButton(
-                  onPressed: () {
-                    setState(() {
-                      yearText++;
-                    });
-                  },
-                  icon: const Icon(Icons.arrow_forward_ios))
-            ],
-          ),
-          SizedBox(
-            height: 300,
-            width: MediaQuery.of(context).size.width,
-            child: GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, // Number of columns
-                  crossAxisSpacing: 8.0, // Spacing between columns
-                  mainAxisSpacing: 8.0, // Spacing between rows
-                ),
-                itemCount: 4,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        chosenQuarter = index;
-                      });
-                      List<DateTime> dates = getQuarterDates(yearText, index);
-                      widget.callbackFunction(dates);
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: chosenQuarter == index
-                              ? widget.chosenColor ?? Colors.blueGrey
-                              : null),
-                      child: Center(
-                        child: Text(getQuarter(
-                            index, yearText, widget.locale ?? "en_US")),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(widget.borderRadius ?? 0),
+                        color: chosenQuarter == index
+                            ? widget.activeColor ?? Colors.blueGrey
+                            : widget.inActiveColor),
+                    child: Center(
+                      child: Text(
+                        getQuarter(index, yearText, widget.locale ?? "en_US"),
+                        style: widget.textStyle,
                       ),
                     ),
-                  );
-                }),
-          ),
-        ],
-      ),
+                  ),
+                );
+              }),
+        ),
+      ],
     );
   }
 }
