@@ -15,3 +15,11 @@ We're excited to announce that our Flutter package now fully supports iOS device
 
 🚀 Upgrade now to the latest version to leverage the full power of our package on iOS devices!
 
+## 0.0.4
+🚀 New Feature: Editable Class! 🚀
+
+We're excited to announce that we've added a highly requested feature to our package: the ability to edit the class directly! 🎉
+
+🖊️ With the new editable class feature, you can now make changes to the class directly within your application, providing greater flexibility and customization options.
+
+💡 Update your app now to take advantage of this powerful new feature and unlock even more possibilities with our package!

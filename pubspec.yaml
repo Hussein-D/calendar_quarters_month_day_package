@@ -1,6 +1,6 @@
 name: calendar_quarters_month_day
 description: "A Flutter package that supports choosing date intervals as quarters , months or day. Supported on both Android and iOS"
-version: 0.0.3
+version: 0.0.4
 homepage: https://github.com/Hussein-D/calendar_quarters_month_day_package
 
 environment:
